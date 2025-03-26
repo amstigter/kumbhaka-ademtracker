@@ -129,6 +129,36 @@ input[type="checkbox"] {
     gap: 5px;
 }
 
+button {
+    padding: 10px 20px;
+    border: 2px solid #0066cc;
+    border-radius: 4px;
+    background-color: #f0f7ff;
+    color: #0066cc;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    min-width: 140px;
+}
+
+button:hover {
+    background-color: #e6f0ff;
+    border-color: #0052a3;
+    color: #0052a3;
+}
+
+.warning-button {
+    background-color: #fff3cd;
+    border-color: #0066cc;
+    color: #856404;
+}
+
+.warning-button:hover {
+    background-color: #ffeeba;
+    border-color: #0052a3;
+}
+
 .info-icon {
     width: 24px;
     height: 24px;
@@ -142,6 +172,7 @@ input[type="checkbox"] {
     align-items: center;
     justify-content: center;
     padding: 0;
+    min-width: unset;
 }
 
 .info-icon:hover {
@@ -167,29 +198,6 @@ button[title]:hover::after {
     white-space: nowrap;
     z-index: 1000;
     margin-bottom: 5px;
-}
-
-.warning-button {
-    background-color: #dc3545;
-}
-
-.warning-button:hover {
-    background-color: #c82333;
-}
-
-button {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 4px;
-    background-color: #0066cc;
-    color: white;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s ease;
-}
-
-button:hover {
-    background-color: #0052a3;
 }
 
 .tips-section {
@@ -297,13 +305,17 @@ button:hover {
 }
 
 .feedback-button {
-    background-color: #0066cc;
+    background-color: #f0f7ff;
+    color: #0066cc;
+    border: 2px solid #0066cc;
     align-self: flex-start;
     margin-top: 10px;
 }
 
 .feedback-button:hover {
-    background-color: #0052a3;
+    background-color: #e6f0ff;
+    border-color: #0052a3;
+    color: #0052a3;
 }
 
 .feedback-history {
@@ -514,16 +526,19 @@ td:first-child {
     }
     
     .button-container {
-        flex-direction: column;
-        align-items: stretch;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
     }
     
     .button-group {
-        width: 100%;
+        width: auto;
     }
     
     button {
-        width: 100%;
+        width: auto;
+        min-width: 120px;
     }
 
     .info-icon:hover::before {
