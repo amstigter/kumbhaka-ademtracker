@@ -438,12 +438,34 @@ td:first-child {
 }
 
 .warning {
-    background-color: #dc3545;
-    color: white;
+    background-color: #fff3cd;
+    color: #856404;
+    padding: 10px;
+    border-radius: 5px;
+    margin: 20px 0;
+    font-size: 0.9em;
 }
 
-.warning:hover {
-    background-color: #c82333;
+.copyright {
+    text-align: center;
+    font-size: 0.8em;
+    color: #666;
+    margin-top: 10px;
+    padding-bottom: 20px;
+}
+
+.website-link {
+    font-size: 0.8em;
+    margin-top: 5px;
+}
+
+.website-link a {
+    color: #666;
+    text-decoration: none;
+}
+
+.website-link a:hover {
+    text-decoration: underline;
 }
 
 @media (max-width: 768px) {
