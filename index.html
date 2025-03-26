@@ -163,11 +163,24 @@
 
         <div class="button-container">
             <div class="button-group">
-                <button id="saveButton">Opslaan</button>
-                <button id="loadButton">Laden</button>
-                <button id="exportCSV">Exporteer als CSV</button>
-                <button id="exportJSON">Exporteer als JSON</button>
-                <button id="clearAll" class="warning">Alles Wissen</button>
+                <button onclick="saveData()">Opslaan</button>
+                <button class="info-icon" title="Slaat alle ingevulde gegevens op voor de geselecteerde week">?</button>
+            </div>
+            <div class="button-group">
+                <button onclick="loadData()">Laden</button>
+                <button class="info-icon" title="Laadt opgeslagen gegevens voor de geselecteerde week">?</button>
+            </div>
+            <div class="button-group">
+                <button onclick="exportToCSV()">Exporteer CSV</button>
+                <button class="info-icon" title="Download alle gegevens als CSV bestand, handig voor gebruik in Excel">?</button>
+            </div>
+            <div class="button-group">
+                <button onclick="exportToJSON()">Exporteer JSON</button>
+                <button class="info-icon" title="Download alle gegevens als JSON bestand, handig voor backup">?</button>
+            </div>
+            <div class="button-group">
+                <button onclick="clearAllData()" class="warning-button">Alles Wissen</button>
+                <button class="info-icon" title="Wist alle opgeslagen gegevens. Let op: dit kan niet ongedaan worden gemaakt!">?</button>
             </div>
         </div>
 
