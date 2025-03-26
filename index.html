@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ademtracker</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Kumbhaka Ademtracker</h1>
+            <p class="subtitle">Volg je dagelijkse oefeningen, ervaringen en vooruitgang</p>
+        </div>
+        
+        <div class="week-selector">
+            <label for="weekNumber">Week:</label>
+            <select id="weekNumber">
+                <option value="1">Week 1</option>
+                <option value="2">Week 2</option>
+                <option value="3">Week 3</option>
+                <option value="4">Week 4</option>
+                <option value="5">Week 5</option>
+                <option value="6">Week 6</option>
+            </select>
+        </div>
+
+        <div class="progress-bar">
+            <div id="progress" class="progress"></div>
+        </div>
+
+        <div class="table-container">
+            <table id="trackerTable">
+                <thead>
+                    <tr>
+                        <th>Dag</th>
+                        <th>BOLT Score Ochtend</th>
+                        <th>BOLT Score Avond</th>
+                        <th>4 min Licht, Laag, Langzaam Ochtend</th>
+                        <th>4 min Licht, Laag, Langzaam Avond</th>
+                        <th>Mond Tape Tijdens Slaap</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Maandag</td>
+                        <td><input type="number" min="0" max="100" class="input-field"></td>
+                        <td><input type="number" min="0" max="100" class="input-field"></td>
+                        <td><input type="checkbox" class="input-field"></td>
+                        <td><input type="checkbox" class="input-field"></td>
+                        <td><input type="checkbox" class="input-field"></td>
+                    </tr>
+                    <tr>
+                        <td>Dinsdag</td>
+                        <td><input type="number" min="0" max="100" class="input-field"></td>
+                        <td><input type="number" min="0" max="100" class="input-field"></td>
+                        <td><input type="checkbox" class="input-field"></td>
+                        <td><input type="checkbox" class="input-field"></td>
+                        <td><input type="checkbox" class="input-field"></td>
+                    </tr>
+                    <tr>
+                        <td>Woensdag</td>
+                        <td><input type="number" min="0" max="100" class="input-field"></td>
+                        <td><input type="number" max="100" class="input-field"></td>
+                        <td><input type="checkbox" class="input-field"></td>
+                        <td><input type="checkbox" class="input-field"></td>
+                        <td><input type="checkbox" class="input-field"></td>
+                    </tr>
+                    <tr>
+                        <td>Donderdag</td>
+                        <td><input type="number" min="0" max="100" class="input-field"></td>
+                        <td><input type="number" min="0" max="100" class="input-field"></td>
+                        <td><input type="checkbox" class="input-field"></td>
+                        <td><input type="checkbox" class="input-field"></td>
+                        <td><input type="checkbox" class="input-field"></td>
+                    </tr>
+                    <tr>
+                        <td>Vrijdag</td>
+                        <td><input type="number" min="0" max="100" class="input-field"></td>
+                        <td><input type="number" min="0" max="100" class="input-field"></td>
+                        <td><input type="checkbox" class="input-field"></td>
+                        <td><input type="checkbox" class="input-field"></td>
+                        <td><input type="checkbox" class="input-field"></td>
+                    </tr>
+                    <tr>
+                        <td>Zaterdag</td>
+                        <td><input type="number" min="0" max="100" class="input-field"></td>
+                        <td><input type="number" min="0" max="100" class="input-field"></td>
+                        <td><input type="checkbox" class="input-field"></td>
+                        <td><input type="checkbox" class="input-field"></td>
+                        <td><input type="checkbox" class="input-field"></td>
+                    </tr>
+                    <tr>
+                        <td>Zondag</td>
+                        <td><input type="number" min="0" max="100" class="input-field"></td>
+                        <td><input type="number" min="0" max="100" class="input-field"></td>
+                        <td><input type="checkbox" class="input-field"></td>
+                        <td><input type="checkbox" class="input-field"></td>
+                        <td><input type="checkbox" class="input-field"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="feedback-section">
+            <h3>Dagelijkse Feedback</h3>
+            <div class="feedback-container">
+                <div class="feedback-input">
+                    <label for="feedbackDay">Dag:</label>
+                    <select id="feedbackDay">
+                        <option value="Maandag">Maandag</option>
+                        <option value="Dinsdag">Dinsdag</option>
+                        <option value="Woensdag">Woensdag</option>
+                        <option value="Donderdag">Donderdag</option>
+                        <option value="Vrijdag">Vrijdag</option>
+                        <option value="Zaterdag">Zaterdag</option>
+                        <option value="Zondag">Zondag</option>
+                    </select>
+                </div>
+                <div class="feedback-input">
+                    <label for="feedbackMood">Hoe voel je je vandaag?</label>
+                    <select id="feedbackMood" class="mood-select">
+                        <option value="">Selecteer je humeur</option>
+                        <option value="5">Uitstekend</option>
+                        <option value="4">Goed</option>
+                        <option value="3">Redelijk</option>
+                        <option value="2">Vermoeid</option>
+                        <option value="1">Gestrest</option>
+                    </select>
+                </div>
+                <div class="feedback-input">
+                    <label for="feedbackText">Jouw ervaringen:</label>
+                    <textarea id="feedbackText" placeholder="Deel hier je ervaringen, uitdagingen en successen van vandaag..."></textarea>
+                </div>
+                <button id="saveFeedback" class="feedback-button">Opslaan Feedback</button>
+            </div>
+            <div class="feedback-history">
+                <h4>Feedback Geschiedenis</h4>
+                <div id="feedbackList"></div>
+            </div>
+        </div>
+
+        <div class="additional-exercises">
+            <h3>Extra Oefeningen Vandaag</h3>
+            <textarea id="additionalExercises" rows="4" placeholder="Voeg andere oefeningen toe die je deze week hebt gedaan"></textarea>
+        </div>
+
+        <div class="weekly-experiences">
+            <h3>Ervaringen & Resultaten Week <span id="currentWeekNumber">1</span></h3>
+            <textarea id="weeklyExperiences" rows="6" placeholder="Beschrijf hier je ervaringen en resultaten aan het einde van deze week. Welke veranderingen heb je opgemerkt? Welke uitdagingen ben je tegengekomen?"></textarea>
+        </div>
+
+        <div class="dashboard">
+            <h3>Voortgang</h3>
+            <canvas id="progressChart"></canvas>
+        </div>
+
+        <div class="button-container">
+            <div class="button-group">
+                <button id="saveButton">Opslaan</button>
+                <button id="loadButton">Laden</button>
+                <button id="exportCSV">Exporteer als CSV</button>
+                <button id="exportJSON">Exporteer als JSON</button>
+                <button id="clearAll" class="warning">Alles Wissen</button>
+            </div>
+        </div>
+
+        <div class="tips-section">
+            <h3>Tips voor Optimale Resultaten</h3>
+            <ul class="tips-list">
+                <li>✓ Consistentie is belangrijker dan perfectie - probeer elke dag minimaal één oefening te doen</li>
+                <li>✓ Meet je BOLT score op dezelfde tijden voor betrouwbare vergelijkingen</li>
+                <li>✓ Begin met kortere periodes mondtape als je dat in het begin oncomfortabel vindt</li>
+                <li>✓ Noteer specifieke waarnemingen over je slaap, energie, focus en stemming</li>
+                <li>✓ Als je een dag mist, maak je geen zorgen - pak het de volgende dag gewoon weer op</li>
+            </ul>
+        </div>
+
+        <div class="waarschuwing-section">
+            <h3>Belangrijke informatie over het opslaan van je gegevens</h3>
+            <div class="waarschuwing-content">
+                <p>Je gegevens worden opgeslagen in je webbrowser (localStorage). Om te voorkomen dat je gegevens verloren gaan, let op het volgende:</p>
+                <ul>
+                    <li>❌ Verwijder geen browsergeschiedenis of cookies van deze website</li>
+                    <li>❌ Gebruik geen incognito/privé modus</li>
+                    <li>❌ Wis geen browsergeschiedenis of cache</li>
+                    <li>❌ Gebruik bij voorkeur steeds dezelfde browser</li>
+                </ul>
+                <p class="tip">💡 Tip: Maak regelmatig een back-up van je gegevens door gebruik te maken van de "Exporteer als JSON" knop.</p>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html> 
