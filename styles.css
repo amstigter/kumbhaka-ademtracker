@@ -116,17 +116,65 @@ input[type="checkbox"] {
 }
 
 .button-container {
-    background-color: transparent;
-    padding: 20px 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
     margin: 20px 0;
-    text-align: center;
 }
 
 .button-group {
     display: flex;
     align-items: center;
     gap: 5px;
+}
+
+.info-icon {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background-color: #2684fc;
+    color: white;
+    border: none;
+    cursor: help;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
+
+.info-icon:hover {
+    background-color: #1a75e8;
+}
+
+/* Tooltip styling */
+button[title] {
     position: relative;
+}
+
+button[title]:hover::after {
+    content: attr(title);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 8px;
+    background-color: #333;
+    color: white;
+    border-radius: 4px;
+    font-size: 14px;
+    white-space: nowrap;
+    z-index: 1000;
+    margin-bottom: 5px;
+}
+
+.warning-button {
+    background-color: #dc3545;
+}
+
+.warning-button:hover {
+    background-color: #c82333;
 }
 
 button {
@@ -138,52 +186,6 @@ button {
     cursor: pointer;
     font-size: 16px;
     transition: background-color 0.3s ease;
-}
-
-.info-icon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 24px;
-    height: 24px;
-    background-color: #0066cc;
-    color: white;
-    border-radius: 50%;
-    font-size: 14px;
-    cursor: help;
-    position: relative;
-}
-
-.info-icon:hover::before {
-    content: attr(data-tooltip);
-    position: absolute;
-    bottom: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    padding: 12px;
-    background-color: rgba(0, 0, 0, 0.9);
-    color: white;
-    border-radius: 6px;
-    font-size: 14px;
-    white-space: normal;
-    z-index: 1000;
-    width: 250px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-    margin-bottom: 8px;
-    line-height: 1.4;
-    text-align: left;
-}
-
-.info-icon:hover::after {
-    content: '';
-    position: absolute;
-    bottom: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    border-width: 6px;
-    border-style: solid;
-    border-color: rgba(0, 0, 0, 0.9) transparent transparent transparent;
-    margin-bottom: -6px;
 }
 
 button:hover {
