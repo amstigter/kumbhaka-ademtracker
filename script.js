@@ -9,16 +9,6 @@ let progressChart;
 document.addEventListener('DOMContentLoaded', () => {
     console.log('DOMContentLoaded event fired');
 
-    // Verwijder de update melding na de animatie
-    setTimeout(() => {
-        const updateMessage = document.getElementById('updateMessage');
-        if (updateMessage) {
-            setTimeout(() => {
-                updateMessage.remove();
-            }, 5500); // 5.5 seconden (5 seconden wachten + 0.5 seconden fade)
-        }
-    }, 0);
-
     initializeChart();
     loadData();
     updateProgressBar();
