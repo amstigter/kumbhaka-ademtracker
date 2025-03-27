@@ -228,11 +228,13 @@ button:hover {
     line-height: 1.5;
     transition: transform 0.2s ease;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    border-left: 4px solid #2196F3;
 }
 
 .tips-list li:hover {
     transform: translateX(5px);
     background-color: #f8f9fa;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .feedback-section {
