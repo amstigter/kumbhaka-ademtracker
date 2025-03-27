@@ -10,8 +10,17 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>Kumbhaka Ademtracker</h1>
-            <p class="subtitle">Volg je dagelijkse oefeningen, ervaringen en vooruitgang</p>
+            <div class="header-content">
+                <img src="logo.jpg" alt="Kumbhaka Logo" class="logo">
+                <div class="header-text">
+                    <h1>Kumbhaka Ademtracker</h1>
+                    <p class="subtitle">Volg je dagelijkse oefeningen, ervaringen en vooruitgang</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="update-message" id="updateMessage">
+            🔄 Update: Je gegevens worden nu automatisch opgeslagen! De 'Opslaan' en 'Laden' knoppen zijn niet meer nodig.
         </div>
         
         <div class="week-selector">
@@ -35,8 +44,8 @@
                 <thead>
                     <tr>
                         <th>Dag</th>
-                        <th>BOLT Score Ochtend</th>
-                        <th>BOLT Score Avond</th>
+                        <th>BOLT Score Ochtend (in sec)</th>
+                        <th>BOLT Score Avond (in sec)</th>
                         <th>4 min Licht, Laag, Langzaam Ochtend</th>
                         <th>4 min Licht, Laag, Langzaam Avond</th>
                         <th>Mond Tape Tijdens Slaap</th>
@@ -45,56 +54,56 @@
                 <tbody>
                     <tr>
                         <td>Maandag</td>
-                        <td><input type="number" min="0" max="100" class="input-field"></td>
-                        <td><input type="number" min="0" max="100" class="input-field"></td>
+                        <td><input type="number" class="input-field" min="0" max="50"></td>
+                        <td><input type="number" class="input-field" min="0" max="50"></td>
                         <td><input type="checkbox" class="input-field"></td>
                         <td><input type="checkbox" class="input-field"></td>
                         <td><input type="checkbox" class="input-field"></td>
                     </tr>
                     <tr>
                         <td>Dinsdag</td>
-                        <td><input type="number" min="0" max="100" class="input-field"></td>
-                        <td><input type="number" min="0" max="100" class="input-field"></td>
+                        <td><input type="number" class="input-field" min="0" max="50"></td>
+                        <td><input type="number" class="input-field" min="0" max="50"></td>
                         <td><input type="checkbox" class="input-field"></td>
                         <td><input type="checkbox" class="input-field"></td>
                         <td><input type="checkbox" class="input-field"></td>
                     </tr>
                     <tr>
                         <td>Woensdag</td>
-                        <td><input type="number" min="0" max="100" class="input-field"></td>
-                        <td><input type="number" max="100" class="input-field"></td>
+                        <td><input type="number" class="input-field" min="0" max="50"></td>
+                        <td><input type="number" class="input-field" min="0" max="50"></td>
                         <td><input type="checkbox" class="input-field"></td>
                         <td><input type="checkbox" class="input-field"></td>
                         <td><input type="checkbox" class="input-field"></td>
                     </tr>
                     <tr>
                         <td>Donderdag</td>
-                        <td><input type="number" min="0" max="100" class="input-field"></td>
-                        <td><input type="number" min="0" max="100" class="input-field"></td>
+                        <td><input type="number" class="input-field" min="0" max="50"></td>
+                        <td><input type="number" class="input-field" min="0" max="50"></td>
                         <td><input type="checkbox" class="input-field"></td>
                         <td><input type="checkbox" class="input-field"></td>
                         <td><input type="checkbox" class="input-field"></td>
                     </tr>
                     <tr>
                         <td>Vrijdag</td>
-                        <td><input type="number" min="0" max="100" class="input-field"></td>
-                        <td><input type="number" min="0" max="100" class="input-field"></td>
+                        <td><input type="number" class="input-field" min="0" max="50"></td>
+                        <td><input type="number" class="input-field" min="0" max="50"></td>
                         <td><input type="checkbox" class="input-field"></td>
                         <td><input type="checkbox" class="input-field"></td>
                         <td><input type="checkbox" class="input-field"></td>
                     </tr>
                     <tr>
                         <td>Zaterdag</td>
-                        <td><input type="number" min="0" max="100" class="input-field"></td>
-                        <td><input type="number" min="0" max="100" class="input-field"></td>
+                        <td><input type="number" class="input-field" min="0" max="50"></td>
+                        <td><input type="number" class="input-field" min="0" max="50"></td>
                         <td><input type="checkbox" class="input-field"></td>
                         <td><input type="checkbox" class="input-field"></td>
                         <td><input type="checkbox" class="input-field"></td>
                     </tr>
                     <tr>
                         <td>Zondag</td>
-                        <td><input type="number" min="0" max="100" class="input-field"></td>
-                        <td><input type="number" min="0" max="100" class="input-field"></td>
+                        <td><input type="number" class="input-field" min="0" max="50"></td>
+                        <td><input type="number" class="input-field" min="0" max="50"></td>
                         <td><input type="checkbox" class="input-field"></td>
                         <td><input type="checkbox" class="input-field"></td>
                         <td><input type="checkbox" class="input-field"></td>
@@ -130,6 +139,10 @@
                     </select>
                 </div>
                 <div class="feedback-input">
+                    <label for="extraExercises">Extra oefeningen vandaag:</label>
+                    <textarea id="extraExercises" placeholder="Welke extra oefeningen heb je vandaag gedaan?"></textarea>
+                </div>
+                <div class="feedback-input">
                     <label for="feedbackText">Jouw ervaringen:</label>
                     <textarea id="feedbackText" placeholder="Deel hier je ervaringen, uitdagingen en successen van vandaag..."></textarea>
                 </div>
@@ -141,11 +154,6 @@
             </div>
         </div>
 
-        <div class="additional-exercises">
-            <h3>Extra Oefeningen Vandaag</h3>
-            <textarea id="additionalExercises" rows="4" placeholder="Voeg andere oefeningen toe die je deze week hebt gedaan"></textarea>
-        </div>
-
         <div class="weekly-experiences">
             <h3>Ervaringen & Resultaten Week <span id="currentWeekNumber">1</span></h3>
             <textarea id="weeklyExperiences" rows="6" placeholder="Beschrijf hier je ervaringen en resultaten aan het einde van deze week. Welke veranderingen heb je opgemerkt? Welke uitdagingen ben je tegengekomen?"></textarea>
@@ -154,16 +162,6 @@
         <div class="dashboard">
             <h3>Voortgang</h3>
             <canvas id="progressChart"></canvas>
-        </div>
-
-        <div class="button-container">
-            <div class="button-group">
-                <button id="saveButton">Opslaan</button>
-                <button id="loadButton">Laden</button>
-                <button id="exportCSV">Exporteer als CSV</button>
-                <button id="exportJSON">Exporteer als JSON</button>
-                <button id="clearAll" class="warning">Alles Wissen</button>
-            </div>
         </div>
 
         <div class="tips-section">
@@ -187,7 +185,37 @@
                     <li>❌ Wis geen browsergeschiedenis of cache</li>
                     <li>❌ Gebruik bij voorkeur steeds dezelfde browser</li>
                 </ul>
-                <p class="tip">💡 Tip: Maak regelmatig een back-up van je gegevens door gebruik te maken van de "Exporteer als JSON" knop.</p>
+                <p class="tip">💡 Tip: Maak regelmatig een back-up van je gegevens door gebruik te maken van de "Maak Back-up" knop.</p>
+            </div>
+        </div>
+
+        <div class="button-container">
+            <div class="button-group">
+                <button id="exportCSV">Exporteer naar Excel</button>
+                <button class="info-icon" title="Download je gegevens als bestand dat je kunt openen in Excel of andere spreadsheet programma's">?</button>
+            </div>
+            <div class="button-group">
+                <button id="exportJSON">Maak Back-up</button>
+                <button class="info-icon" title="Download een volledige kopie van al je gegevens. Handig om later weer te kunnen importeren.">?</button>
+            </div>
+            <div class="button-group">
+                <input type="file" id="importJSON" accept=".json" style="display: none;">
+                <button id="importJSONBtn">Herstel Back-up</button>
+                <button class="info-icon" title="Herstel je gegevens van een eerder gemaakte back-up">?</button>
+            </div>
+            <div class="button-group">
+                <button id="clearAll" class="warning-button">Alles Wissen</button>
+                <button class="info-icon" title="Wist alle opgeslagen gegevens. Let op: dit kan niet ongedaan worden gemaakt!">?</button>
+            </div>
+        </div>
+
+        <div class="warning">
+            <strong>Belangrijk:</strong> Je gegevens worden automatisch opgeslagen in je webbrowser (localStorage). Deze tool is alleen bedoeld als hulpmiddel en vervangt geen professioneel medisch advies. Raadpleeg altijd een arts bij gezondheidsklachten.
+        </div>
+        <div class="copyright">
+            © 2025 Kumbhaka Ademtracker
+            <div class="website-link">
+                <a href="https://www.kumbhaka.nu" target="_blank">www.kumbhaka.nu</a>
             </div>
         </div>
     </div>

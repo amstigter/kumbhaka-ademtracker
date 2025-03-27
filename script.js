@@ -1,5 +1,5 @@
 // Configuratie
-const API_URL = 'http://localhost:3000/api';
+const API_URL = 'https://ademtracker-api.onrender.com/api';
 let authToken = localStorage.getItem('authToken');
 
 // Initialisatie van de Chart.js grafiek
@@ -7,34 +7,119 @@ let progressChart;
 
 // Event listeners voor de knoppen
 document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOMContentLoaded event fired');
+
+    // Verwijder de update melding na de animatie
+    setTimeout(() => {
+        const updateMessage = document.getElementById('updateMessage');
+        if (updateMessage) {
+            setTimeout(() => {
+                updateMessage.remove();
+            }, 5500); // 5.5 seconden (5 seconden wachten + 0.5 seconden fade)
+        }
+    }, 0);
+
     initializeChart();
     loadData();
     updateProgressBar();
     updateWeekNumber();
     updateDailyProgress();
     
-    document.getElementById('saveButton').addEventListener('click', saveData);
-    document.getElementById('loadButton').addEventListener('click', loadData);
-    document.getElementById('exportCSV').addEventListener('click', exportToCSV);
-    document.getElementById('exportJSON').addEventListener('click', exportToJSON);
-    document.getElementById('clearAll').addEventListener('click', clearAllData);
-    document.getElementById('weekNumber').addEventListener('change', () => {
-        loadData();
-        updateWeekNumber();
-        updateDailyProgress();
-    });
-    document.getElementById('saveFeedback').addEventListener('click', saveFeedback);
+    // Event listeners voor knoppen
+    const exportCSVBtn = document.getElementById('exportCSV');
+    const exportJSONBtn = document.getElementById('exportJSON');
+    const importJSONBtn = document.getElementById('importJSONBtn');
+    const importJSONInput = document.getElementById('importJSON');
+    const clearAllBtn = document.getElementById('clearAll');
     
-    // Event listeners voor automatisch opslaan bij wijzigingen
-    document.querySelectorAll('.input-field').forEach(input => {
-        input.addEventListener('change', () => {
+    console.log('Export CSV button:', exportCSVBtn);
+    console.log('Export JSON button:', exportJSONBtn);
+    console.log('Clear All button:', clearAllBtn);
+    
+    if (exportCSVBtn) {
+        exportCSVBtn.addEventListener('click', () => {
+            console.log('CSV export button clicked');
+            try {
+                exportToCSV();
+            } catch (error) {
+                console.error('CSV export error:', error);
+                alert('Er is een fout opgetreden bij het exporteren naar CSV.');
+            }
+        });
+    }
+    
+    if (exportJSONBtn) {
+        exportJSONBtn.addEventListener('click', () => {
+            console.log('JSON export button clicked');
+            try {
+                exportToJSON();
+            } catch (error) {
+                console.error('JSON export error:', error);
+                alert('Er is een fout opgetreden bij het exporteren naar JSON.');
+            }
+        });
+    }
+    
+    if (clearAllBtn) {
+        clearAllBtn.addEventListener('click', clearAllData);
+    }
+    
+    if (importJSONBtn) {
+        importJSONBtn.addEventListener('click', () => {
+            importJSONInput.click();
+        });
+    }
+    
+    if (importJSONInput) {
+        importJSONInput.addEventListener('change', handleImport);
+    }
+    
+    // Automatisch laden bij week verandering
+    const weekNumberSelect = document.getElementById('weekNumber');
+    if (weekNumberSelect) {
+        weekNumberSelect.addEventListener('change', () => {
+            localStorage.setItem('lastSelectedWeek', weekNumberSelect.value);
+            loadData();
+            updateWeekNumber();
+            updateDailyProgress();
+        });
+    }
+    
+    // Event listeners voor automatisch opslaan en voortgang
+    const inputs = document.querySelectorAll('#trackerTable input');
+    console.log('Aantal input velden gevonden:', inputs.length);
+    
+    inputs.forEach(input => {
+        input.addEventListener('input', () => {
+            console.log('Input veranderd');
             saveData();
             updateDailyProgress();
+            updateProgressBar();
         });
     });
     
-    document.getElementById('additionalExercises').addEventListener('change', saveData);
-    document.getElementById('weeklyExperiences').addEventListener('change', saveData);
+    // Automatisch opslaan voor tekstvelden
+    const additionalExercises = document.getElementById('additionalExercises');
+    const weeklyExperiences = document.getElementById('weeklyExperiences');
+    if (additionalExercises) {
+        additionalExercises.addEventListener('input', saveData);
+    }
+    if (weeklyExperiences) {
+        weeklyExperiences.addEventListener('input', saveData);
+    }
+    
+    // Feedback functionaliteit
+    const saveFeedbackBtn = document.getElementById('saveFeedback');
+    if (saveFeedbackBtn) {
+        saveFeedbackBtn.addEventListener('click', saveFeedback);
+    }
+    
+    // Laad de laatste geselecteerde week
+    const lastSelectedWeek = localStorage.getItem('lastSelectedWeek') || '1';
+    if (weekNumberSelect) {
+        weekNumberSelect.value = lastSelectedWeek;
+        loadData();
+    }
 });
 
 // Authenticatie functies
@@ -123,13 +208,14 @@ function saveData() {
     const data = {
         weekNumber: parseInt(weekNumber),
         tableData: getTableData(),
-        additionalExercises: document.getElementById('additionalExercises').value,
-        weeklyExperiences: document.getElementById('weeklyExperiences').value
+        weeklyExperiences: document.getElementById('weeklyExperiences')?.value || ''
     };
     
     localStorage.setItem(`week${weekNumber}`, JSON.stringify(data));
+    localStorage.setItem('lastSelectedWeek', weekNumber);
     updateProgressBar();
     updateChart();
+    updateDailyProgress();
 }
 
 // Laden van gegevens
@@ -140,12 +226,16 @@ function loadData() {
     if (savedData) {
         const data = JSON.parse(savedData);
         setTableData(data.tableData);
-        document.getElementById('additionalExercises').value = data.additionalExercises || '';
-        document.getElementById('weeklyExperiences').value = data.weeklyExperiences || '';
+        const weeklyExperiences = document.getElementById('weeklyExperiences');
+        if (weeklyExperiences) {
+            weeklyExperiences.value = data.weeklyExperiences || '';
+        }
     } else {
         clearTable();
-        document.getElementById('additionalExercises').value = '';
-        document.getElementById('weeklyExperiences').value = '';
+        const weeklyExperiences = document.getElementById('weeklyExperiences');
+        if (weeklyExperiences) {
+            weeklyExperiences.value = '';
+        }
     }
     
     displayFeedback(weekNumber);
@@ -191,71 +281,90 @@ function setTableData(data) {
 
 // Tabel leegmaken
 function clearTable() {
-    document.querySelectorAll('.input-field').forEach(input => {
+    const inputs = document.querySelectorAll('#trackerTable .input-field');
+    inputs.forEach(input => {
         if (input.type === 'checkbox') {
             input.checked = false;
         } else {
             input.value = '';
         }
     });
-    document.getElementById('additionalExercises').value = '';
 }
 
 // Voortgangsbalk bijwerken
 function updateProgressBar() {
+    console.log('updateProgressBar wordt aangeroepen');
     const rows = document.querySelectorAll('#trackerTable tbody tr');
     let totalFields = 0;
     let filledFields = 0;
     
     rows.forEach(row => {
-        const inputs = row.querySelectorAll('.input-field');
+        const inputs = row.querySelectorAll('input');
+        console.log('Aantal inputs gevonden:', inputs.length);
         inputs.forEach(input => {
-            totalFields++;
-            if (input.type === 'checkbox') {
-                if (input.checked) filledFields++;
-            } else {
-                if (input.value !== '') filledFields++;
+            if (input.type === 'number' || input.type === 'checkbox') {
+                totalFields++;
+                if (input.type === 'checkbox' && input.checked) {
+                    filledFields++;
+                } else if (input.type === 'number' && input.value !== '') {
+                    filledFields++;
+                }
             }
         });
     });
     
     const progress = (filledFields / totalFields) * 100;
-    document.getElementById('progress').style.width = `${progress}%`;
+    console.log('Voortgang berekend:', progress);
+    const progressBar = document.getElementById('progress');
+    if (progressBar) {
+        progressBar.style.width = `${progress}%`;
+        console.log('Voortgangsbalk bijgewerkt');
+    } else {
+        console.error('Progress bar element niet gevonden');
+    }
 }
 
 // Dagelijkse voortgang berekenen en weergeven
 function updateDailyProgress() {
+    console.log('updateDailyProgress wordt aangeroepen');
     const rows = document.querySelectorAll('#trackerTable tbody tr');
     
-    rows.forEach((row, index) => {
-        const inputs = row.querySelectorAll('.input-field');
-        let filledFields = 0;
+    rows.forEach(row => {
+        const dayCell = row.cells[0];
+        const progressSpan = dayCell.querySelector('.daily-progress');
+        
+        // Verwijder bestaande progress span als die er is
+        if (progressSpan) {
+            progressSpan.remove();
+        }
+        
+        // Bereken percentage voor deze dag
+        const inputs = row.querySelectorAll('input');
+        console.log('Aantal inputs gevonden voor dag:', inputs.length);
+        let completedFields = 0;
         let totalFields = 0;
         
         inputs.forEach(input => {
-            if (input.type === 'checkbox') {
+            if (input.type === 'number' || input.type === 'checkbox') {
                 totalFields++;
-                if (input.checked) filledFields++;
-            } else {
-                totalFields++;
-                if (input.value !== '') filledFields++;
+                if (input.type === 'checkbox' && input.checked) {
+                    completedFields++;
+                } else if (input.type === 'number' && input.value !== '') {
+                    completedFields++;
+                }
             }
         });
         
-        const progress = (filledFields / totalFields) * 100;
-        const dayCell = row.querySelector('td:first-child');
+        const percentage = Math.round((completedFields / totalFields) * 100);
+        console.log('Percentage berekend voor dag:', percentage);
         
-        // Verwijder bestaande voortgang indicator als die er is
-        const existingProgress = dayCell.querySelector('.daily-progress');
-        if (existingProgress) {
-            existingProgress.remove();
-        }
+        // Voeg nieuwe progress span toe
+        const newProgressSpan = document.createElement('span');
+        newProgressSpan.className = 'daily-progress';
+        newProgressSpan.textContent = `${percentage}%`;
         
-        // Voeg nieuwe voortgang indicator toe
-        const progressSpan = document.createElement('span');
-        progressSpan.className = 'daily-progress';
-        progressSpan.textContent = `${Math.round(progress)}%`;
-        dayCell.appendChild(progressSpan);
+        // Voeg de progress span toe aan de eerste cel van de rij
+        dayCell.appendChild(newProgressSpan);
     });
 }
 
@@ -279,7 +388,6 @@ function updateChart() {
 function exportToCSV() {
     const weekNumber = document.getElementById('weekNumber').value;
     const data = getTableData();
-    const additionalExercises = document.getElementById('additionalExercises').value;
     const weeklyExperiences = document.getElementById('weeklyExperiences').value;
     const weekFeedback = JSON.parse(localStorage.getItem(`feedback_week${weekNumber}`) || '[]');
     
@@ -291,8 +399,7 @@ function exportToCSV() {
         csv += `${days[index]},${row.join(',')}\n`;
     });
     
-    csv += '\nExtra Oefeningen:\n' + additionalExercises;
-    csv += '\n\nWekelijkse Ervaringen:\n' + weeklyExperiences;
+    csv += '\nWekelijkse Ervaringen:\n' + weeklyExperiences;
     
     if (weekFeedback.length > 0) {
         csv += '\n\nDagelijkse Feedback:\n';
@@ -300,14 +407,21 @@ function exportToCSV() {
             csv += `\n${feedback.day}:\n`;
             csv += `Humeur: ${getMoodEmoji(feedback.mood)}\n`;
             csv += `Ervaringen: ${feedback.text}\n`;
+            if (feedback.extraExercises) {
+                csv += `Extra Oefeningen: ${feedback.extraExercises}\n`;
+            }
         });
     }
     
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = window.URL.createObjectURL(blob);
     const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
+    link.href = url;
     link.download = `ademtracker_week${weekNumber}.csv`;
+    document.body.appendChild(link);
     link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
 }
 
 // Exporteren naar JSON
@@ -316,16 +430,19 @@ function exportToJSON() {
     const data = {
         week: weekNumber,
         tableData: getTableData(),
-        additionalExercises: document.getElementById('additionalExercises').value,
         weeklyExperiences: document.getElementById('weeklyExperiences').value,
         feedback: JSON.parse(localStorage.getItem(`feedback_week${weekNumber}`) || '[]')
     };
     
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = window.URL.createObjectURL(blob);
     const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
+    link.href = url;
     link.download = `ademtracker_week${weekNumber}.json`;
+    document.body.appendChild(link);
     link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
 }
 
 // Feedback opslaan
@@ -334,70 +451,78 @@ function saveFeedback() {
     const day = document.getElementById('feedbackDay').value;
     const mood = document.getElementById('feedbackMood').value;
     const text = document.getElementById('feedbackText').value;
-    
-    if (!text.trim()) {
-        alert('Vul alstublieft je ervaringen in.');
+    const extraExercises = document.getElementById('extraExercises').value;
+
+    if (!mood || !text) {
+        alert('Vul alstublieft zowel je humeur als je ervaringen in.');
         return;
     }
+
+    let weekFeedback = JSON.parse(localStorage.getItem(`feedback_week${weekNumber}`) || '[]');
     
-    if (!mood) {
-        alert('Selecteer alstublieft hoe je je voelt.');
-        return;
-    }
+    // Verwijder bestaande feedback voor deze dag
+    weekFeedback = weekFeedback.filter(item => item.day !== day);
     
-    const feedback = {
+    // Voeg nieuwe feedback toe
+    weekFeedback.push({
         day,
         mood,
         text,
+        extraExercises,
         timestamp: new Date().toISOString()
-    };
+    });
     
-    // Bestaande feedback laden
-    let weekFeedback = JSON.parse(localStorage.getItem(`feedback_week${weekNumber}`) || '[]');
+    // Sorteer feedback op dag van de week
+    const dayOrder = ['Maandag', 'Dinsdag', 'Woensdag', 'Donderdag', 'Vrijdag', 'Zaterdag', 'Zondag'];
+    weekFeedback.sort((a, b) => dayOrder.indexOf(a.day) - dayOrder.indexOf(b.day));
     
-    // Feedback voor deze dag updaten of toevoegen
-    const existingIndex = weekFeedback.findIndex(f => f.day === day);
-    if (existingIndex !== -1) {
-        weekFeedback[existingIndex] = feedback;
-    } else {
-        weekFeedback.push(feedback);
-    }
-    
-    // Feedback opslaan
     localStorage.setItem(`feedback_week${weekNumber}`, JSON.stringify(weekFeedback));
     
-    // Feedback lijst updaten
-    displayFeedback(weekNumber);
-    
-    // Formulier resetten
-    document.getElementById('feedbackText').value = '';
+    // Reset formulier
     document.getElementById('feedbackMood').value = '';
+    document.getElementById('feedbackText').value = '';
+    document.getElementById('extraExercises').value = '';
     
-    // Bevestiging tonen
-    alert('Je feedback is opgeslagen!');
+    displayFeedback(weekNumber);
+    alert('Feedback opgeslagen!');
 }
 
 // Feedback weergeven
 function displayFeedback(weekNumber) {
-    const feedbackList = document.getElementById('feedbackList');
     const weekFeedback = JSON.parse(localStorage.getItem(`feedback_week${weekNumber}`) || '[]');
+    const feedbackList = document.getElementById('feedbackList');
+    feedbackList.innerHTML = '';
     
-    // Sorteer op dag
-    const days = ['Maandag', 'Dinsdag', 'Woensdag', 'Donderdag', 'Vrijdag', 'Zaterdag', 'Zondag'];
-    weekFeedback.sort((a, b) => days.indexOf(a.day) - days.indexOf(b.day));
-    
-    feedbackList.innerHTML = weekFeedback.map(feedback => `
-        <div class="feedback-item">
-            <div class="feedback-item-header">
-                <span>${feedback.day}</span>
-                <span>${getMoodEmoji(feedback.mood)}</span>
-            </div>
-            <div class="feedback-item-content">
-                ${feedback.text}
-            </div>
-        </div>
-    `).join('');
+    weekFeedback.forEach(feedback => {
+        const feedbackItem = document.createElement('div');
+        feedbackItem.className = 'feedback-item';
+        feedbackItem.innerHTML = `
+            <strong>${feedback.day}</strong><br>
+            Humeur: ${getMoodEmoji(feedback.mood)}<br>
+            ${feedback.extraExercises ? `<strong>Extra oefeningen:</strong><br>${feedback.extraExercises}<br><br>` : ''}
+            <strong>Ervaringen:</strong><br>${feedback.text}
+        `;
+        feedbackList.appendChild(feedbackItem);
+    });
 }
+
+// Als een dag wordt geselecteerd, laad de bestaande feedback
+document.getElementById('feedbackDay').addEventListener('change', function() {
+    const weekNumber = document.getElementById('weekNumber').value;
+    const selectedDay = this.value;
+    const weekFeedback = JSON.parse(localStorage.getItem(`feedback_week${weekNumber}`) || '[]');
+    const dayFeedback = weekFeedback.find(item => item.day === selectedDay);
+    
+    if (dayFeedback) {
+        document.getElementById('feedbackMood').value = dayFeedback.mood;
+        document.getElementById('feedbackText').value = dayFeedback.text;
+        document.getElementById('extraExercises').value = dayFeedback.extraExercises || '';
+    } else {
+        document.getElementById('feedbackMood').value = '';
+        document.getElementById('feedbackText').value = '';
+        document.getElementById('extraExercises').value = '';
+    }
+});
 
 // Emoji converteren
 function getMoodEmoji(mood) {
@@ -436,4 +561,56 @@ function clearAllData() {
         
         alert('Alle gegevens zijn gewist.');
     }
+}
+
+// Import functionaliteit
+function handleImport(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const data = JSON.parse(e.target.result);
+            
+            // Controleer of het een geldig back-up bestand is
+            if (!data.week || !data.tableData) {
+                alert('Dit is geen geldig back-up bestand van de Ademtracker.');
+                return;
+            }
+            
+            // Bevestig met de gebruiker
+            if (!confirm(`Weet je zeker dat je de gegevens van week ${data.week} wilt herstellen? Dit zal je huidige gegevens overschrijven.`)) {
+                return;
+            }
+            
+            // Herstel de gegevens
+            localStorage.setItem(`week${data.week}`, JSON.stringify({
+                weekNumber: parseInt(data.week),
+                tableData: data.tableData,
+                weeklyExperiences: data.weeklyExperiences || ''
+            }));
+            
+            // Herstel de feedback
+            if (data.feedback) {
+                localStorage.setItem(`feedback_week${data.week}`, JSON.stringify(data.feedback));
+            }
+            
+            // Update de UI
+            document.getElementById('weekNumber').value = data.week;
+            loadData();
+            updateProgressBar();
+            updateChart();
+            updateDailyProgress();
+            
+            alert('Back-up succesvol hersteld!');
+        } catch (error) {
+            console.error('Import error:', error);
+            alert('Er is een fout opgetreden bij het herstellen van de back-up.');
+        }
+    };
+    
+    reader.readAsText(file);
+    // Reset de file input
+    event.target.value = '';
 } 
