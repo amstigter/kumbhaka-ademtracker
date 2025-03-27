@@ -19,6 +19,10 @@
             </div>
         </div>
         
+        <div class="update-message" id="updateMessage">
+            🔄 Update: Je gegevens worden nu automatisch opgeslagen! De 'Opslaan' en 'Laden' knoppen zijn niet meer nodig.
+        </div>
+        
         <div class="week-selector">
             <label for="weekNumber">Week:</label>
             <select id="weekNumber">
@@ -135,6 +139,10 @@
                     </select>
                 </div>
                 <div class="feedback-input">
+                    <label for="extraExercises">Extra oefeningen vandaag:</label>
+                    <textarea id="extraExercises" placeholder="Welke extra oefeningen heb je vandaag gedaan?"></textarea>
+                </div>
+                <div class="feedback-input">
                     <label for="feedbackText">Jouw ervaringen:</label>
                     <textarea id="feedbackText" placeholder="Deel hier je ervaringen, uitdagingen en successen van vandaag..."></textarea>
                 </div>
@@ -146,11 +154,6 @@
             </div>
         </div>
 
-        <div class="additional-exercises">
-            <h3>Extra Oefeningen Vandaag</h3>
-            <textarea id="additionalExercises" rows="4" placeholder="Voeg andere oefeningen toe die je deze week hebt gedaan"></textarea>
-        </div>
-
         <div class="weekly-experiences">
             <h3>Ervaringen & Resultaten Week <span id="currentWeekNumber">1</span></h3>
             <textarea id="weeklyExperiences" rows="6" placeholder="Beschrijf hier je ervaringen en resultaten aan het einde van deze week. Welke veranderingen heb je opgemerkt? Welke uitdagingen ben je tegengekomen?"></textarea>
@@ -159,29 +162,6 @@
         <div class="dashboard">
             <h3>Voortgang</h3>
             <canvas id="progressChart"></canvas>
-        </div>
-
-        <div class="button-container">
-            <div class="button-group">
-                <button onclick="saveData()">Opslaan</button>
-                <button class="info-icon" title="Slaat alle ingevulde gegevens op voor de geselecteerde week">?</button>
-            </div>
-            <div class="button-group">
-                <button onclick="loadData()">Laden</button>
-                <button class="info-icon" title="Laadt opgeslagen gegevens voor de geselecteerde week">?</button>
-            </div>
-            <div class="button-group">
-                <button onclick="exportToCSV()">Exporteer CSV</button>
-                <button class="info-icon" title="Download alle gegevens als CSV bestand, handig voor gebruik in Excel">?</button>
-            </div>
-            <div class="button-group">
-                <button onclick="exportToJSON()">Exporteer JSON</button>
-                <button class="info-icon" title="Download alle gegevens als JSON bestand, handig voor backup">?</button>
-            </div>
-            <div class="button-group">
-                <button onclick="clearAllData()" class="warning-button">Alles Wissen</button>
-                <button class="info-icon" title="Wist alle opgeslagen gegevens. Let op: dit kan niet ongedaan worden gemaakt!">?</button>
-            </div>
         </div>
 
         <div class="tips-section">
@@ -205,12 +185,27 @@
                     <li>❌ Wis geen browsergeschiedenis of cache</li>
                     <li>❌ Gebruik bij voorkeur steeds dezelfde browser</li>
                 </ul>
-                <p class="tip">💡 Tip: Maak regelmatig een back-up van je gegevens door gebruik te maken van de "Exporteer als JSON" knop.</p>
+                <p class="tip">💡 Tip: Maak regelmatig een back-up van je gegevens door gebruik te maken van de "Maak Back-up" knop.</p>
+            </div>
+        </div>
+
+        <div class="button-container">
+            <div class="button-group">
+                <button onclick="exportToCSV()">Exporteer naar Excel</button>
+                <button class="info-icon" title="Download je gegevens als bestand dat je kunt openen in Excel of andere spreadsheet programma's">?</button>
+            </div>
+            <div class="button-group">
+                <button onclick="exportToJSON()">Maak Back-up</button>
+                <button class="info-icon" title="Download een volledige kopie van al je gegevens. Handig om later weer te kunnen importeren.">?</button>
+            </div>
+            <div class="button-group">
+                <button onclick="clearAllData()" class="warning-button">Alles Wissen</button>
+                <button class="info-icon" title="Wist alle opgeslagen gegevens. Let op: dit kan niet ongedaan worden gemaakt!">?</button>
             </div>
         </div>
 
         <div class="warning">
-            <strong>Waarschuwing:</strong> Deze tool is alleen bedoeld als hulpmiddel en vervangt geen professioneel medisch advies. Raadpleeg altijd een arts bij gezondheidsklachten.
+            <strong>Waarschuwing:</strong> Je gegevens worden automatisch opgeslagen in je webbrowser (localStorage). Deze tool is alleen bedoeld als hulpmiddel en vervangt geen professioneel medisch advies. Raadpleeg altijd een arts bij gezondheidsklachten.
         </div>
         <div class="copyright">
             © 2025 Kumbhaka Ademtracker
