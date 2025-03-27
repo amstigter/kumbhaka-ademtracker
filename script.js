@@ -99,11 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     
     // Automatisch opslaan voor tekstvelden
-    const additionalExercises = document.getElementById('additionalExercises');
     const weeklyExperiences = document.getElementById('weeklyExperiences');
-    if (additionalExercises) {
-        additionalExercises.addEventListener('input', saveData);
-    }
     if (weeklyExperiences) {
         weeklyExperiences.addEventListener('input', saveData);
     }
@@ -293,7 +289,6 @@ function clearTable() {
 
 // Voortgangsbalk bijwerken
 function updateProgressBar() {
-    console.log('updateProgressBar wordt aangeroepen');
     const rows = document.querySelectorAll('#trackerTable tbody tr');
     let totalFields = 0;
     let filledFields = 0;
