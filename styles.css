@@ -222,7 +222,7 @@ button:hover {
 .tips-list li {
     padding: 12px 15px;
     margin-bottom: 10px;
-    background-color: #ffffff;
+    background-color: #e6f3ff;
     border-radius: 6px;
     font-size: 14px;
     line-height: 1.5;
@@ -233,8 +233,18 @@ button:hover {
 
 .tips-list li:hover {
     transform: translateX(5px);
-    background-color: #f8f9fa;
+    background-color: #d9edff;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.tip {
+    font-style: italic;
+    color: #856404;
+    margin-top: 10px;
+    background-color: #e6f3ff;
+    padding: 12px 15px;
+    border-radius: 6px;
+    border-left: 4px solid #2196F3;
 }
 
 .feedback-section {
@@ -359,12 +369,6 @@ button:hover {
     position: absolute;
     left: -15px;
     color: #856404;
-}
-
-.tip {
-    font-style: italic;
-    color: #856404;
-    margin-top: 10px;
 }
 
 .warning {
